@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lumatvet</title>
+<meta name="description" content="Lumatvet · Atención veterinaria a domicilio">
+<meta name="theme-color" content="#155C4A">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lumatvet">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F4F7F5;--surface:#fff;--ink:#17241F;--mut:#5E6B66;--line:#E3EAE6;--c1:#1F7A63;--c1-dk:#155C4A;--mint:#E7F4EE;--mint-2:#CDE7DB;--warn:#B4610E;--bad:#C0392B}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:Figtree,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
+.hide{display:none !important}
+/* ----- la app (cuando está instalada) ----- */
+#app{position:fixed;inset:0;background:var(--bg)}
+#app iframe{border:0;width:100%;height:100%;display:block;background:var(--bg)}
+#splash{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--bg);text-align:center;padding:24px;z-index:2;transition:opacity .25s}
+#splash.fuera{opacity:0;pointer-events:none}
+#splash img{width:120px;height:120px;border-radius:28px;box-shadow:0 10px 24px rgba(23,36,31,.12)}
+#splash .t{font-weight:700;font-size:18px}
+#splash .s{color:var(--mut);font-size:15px;max-width:300px;line-height:21px}
+.dots{display:flex;gap:6px}.dots i{width:8px;height:8px;border-radius:50%;background:var(--c1);animation:d 1.2s infinite ease-in-out}
+.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes d{0%,80%,100%{opacity:.25;transform:scale(.8)}40%{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.dots i{animation:none;opacity:.6}}
+/* ----- página de instalación ----- */
+main{max-width:460px;margin:0 auto;padding:calc(28px + env(safe-area-inset-top)) 16px calc(32px + env(safe-area-inset-bottom))}
+.hero{text-align:center;background:linear-gradient(170deg,#fff 40%,var(--mint));border:1px solid var(--mint-2);border-radius:24px;padding:24px 18px 20px;box-shadow:0 8px 20px rgba(31,122,99,.08)}
+.hero img{width:132px;height:132px;border-radius:30px;box-shadow:0 10px 24px rgba(23,36,31,.14)}
+.brand{font-size:30px;font-weight:700;letter-spacing:-.5px;margin:14px 0 2px}.brand b{color:var(--c1)}
+.tag{color:var(--mut);font-size:15px}
+.hi{display:inline-flex;margin-top:14px;padding:4px 12px;border-radius:999px;background:var(--mint);border:1px solid var(--mint-2);color:var(--c1-dk);font-weight:700;font-size:13px}
+.hero p{font-size:16px;line-height:23px;margin:10px 4px 18px}
+button,.btn{font:inherit;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:52px;border-radius:16px;border:none;background:linear-gradient(150deg,#22806A,var(--c1-dk));color:#fff;font-size:17px;font-weight:700;cursor:pointer;text-decoration:none;box-shadow:0 8px 18px rgba(21,92,74,.25)}
+button:active,.btn:active{transform:scale(.98)}
+.sec{background:var(--surface);color:var(--c1-dk);border:1px solid var(--mint-2);box-shadow:none;margin-top:10px}
+svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;margin-top:14px}
+.card h2{font-size:17px;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.card h2 svg{color:var(--c1-dk)}
+ol{margin:0;padding-left:22px;font-size:16px;line-height:24px}ol li{margin:4px 0}
+.ok{display:flex;gap:10px;align-items:flex-start;background:var(--mint);border:1px solid var(--mint-2);color:var(--c1-dk);border-radius:14px;padding:12px;font-weight:600;font-size:15px;line-height:21px;margin-top:14px}
+.nota{color:var(--mut);font-size:13.5px;line-height:19px;text-align:center;margin-top:16px}
+label{display:block;font-weight:600;font-size:15px;margin:4px 0 6px}
+input{font:inherit;font-size:16px;width:100%;min-height:48px;border:1px solid #CFD9D4;border-radius:14px;padding:10px 12px;background:#fff;color:var(--ink)}
+input:focus{outline:2px solid var(--c1);outline-offset:1px}
+.err{color:var(--bad);font-size:14px;margin-top:6px}
+</style>
+</head>
+<body>
+
+<!-- La app instalada: la app de Google Apps Script a pantalla completa -->
+<div id="app" class="hide">
+  <div id="splash">
+    <img src="icon-192.png" alt="">
+    <div class="t" id="sp-t">Abriendo Lumatvet</div>
+    <div class="s" id="sp-s">Trayendo los datos de la planilla…</div>
+    <div class="dots" id="sp-dots"><i></i><i></i><i></i></div>
+    <div id="sp-acc" class="hide" style="width:100%;max-width:300px"><button onclick="abrirApp()">Reintentar</button></div>
+  </div>
+</div>
+
+<!-- Página para instalar (en el navegador) -->
+<main id="inst" class="hide">
+  <div class="hero">
+    <img src="icon-512.png" alt="Lumi, la mascota de Lumatvet">
+    <div class="brand">Lumat<b>vet</b></div>
+    <div class="tag">Atención a domicilio</div>
+    <span class="hi">¡Hola, Dra.! Soy Lumi</span>
+    <p>Instalá la app en tu celular: queda en la pantalla de inicio, se abre a pantalla completa y sin la barra del navegador.</p>
+    <button id="b-inst" class="hide" onclick="instalar()"><svg viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5"/><path d="M5 19h14"/></svg>Instalar la app</button>
+    <div id="ya" class="ok hide"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div>Listo, la app quedó instalada. Abrila desde la pantalla de inicio: el ícono de Lumi dice «Lumatvet».</div></div>
+  </div>
+
+  <div class="card" id="c-android">
+    <h2><svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></svg>En Android (Chrome)</h2>
+    <ol><li>Tocá <b>Instalar la app</b>.</li><li>Si no aparece el botón: abrí el menú <b>⋮</b> de Chrome y tocá <b>Instalar aplicación</b> (o <b>Agregar a la pantalla principal</b>).</li><li>Confirmá con <b>Instalar</b>.</li></ol>
+  </div>
+
+  <div class="card hide" id="c-ios">
+    <h2><svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></svg>En iPhone (Safari)</h2>
+    <ol><li>Tocá <b>Copiar el link de la app</b> (abajo).</li><li>Tocá <b>Compartir</b> (el cuadrado con la flecha) y elegí <b>Agregar a inicio</b>.</li><li>Abrí Lumatvet desde el inicio y, la primera vez, pegá el link.</li></ol>
+    <button class="sec" onclick="copiar()" id="b-copiar"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>Copiar el link de la app</button>
+  </div>
+
+  <a class="btn sec" id="b-nav" href="#" target="_self"><svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Usar en el navegador sin instalar</a>
+  <div class="nota">Lumi nunca guarda nada sin tu confirmación. Tus datos siguen en tu planilla de Google.</div>
+</main>
+
+<!-- Falta el link de la app (por ejemplo, la primera vez en iPhone) -->
+<main id="falta" class="hide">
+  <div class="hero">
+    <img src="icon-512.png" alt="">
+    <div class="brand">Lumat<b>vet</b></div>
+    <p>Para abrir tu app, pegá el link que te pasaron (una sola vez).</p>
+    <label for="f-link">Link de la app</label>
+    <input id="f-link" type="url" inputmode="url" autocomplete="off" placeholder="https://…">
+    <div class="err hide" id="f-err">Ese link no es de la app. Pegá el link completo que te pasaron.</div>
+    <button style="margin-top:14px" onclick="guardarLink()">Abrir Lumatvet</button>
+  </div>
+</main>
+
+<script>
+// El link de la app de Apps Script NO está en esta página (el repositorio es público).
+// Viaja en el link que se comparte, después del # (el # no se manda a ningún servidor), y queda guardado en el celular.
+const CLAVE = 'lv-app-id';
+const $ = id => document.getElementById(id);
+const leer = () => { try { return localStorage.getItem(CLAVE) || ''; } catch (e) { return ''; } };
+const poner = v => { try { localStorage.setItem(CLAVE, v); } catch (e) {} };
+const idDe = t => { const m = /(AKfy[\w-]{20,})/.exec(String(t || '')); return m ? m[1] : ''; };
+const urlApp = id => 'https://script.google.com/macros/s/' + id + '/exec';
+
+// el link con #id (o el de "pegar") se guarda y se borra de la barra de direcciones
+const deHash = idDe(location.hash);
+if (deHash) { poner(deHash); history.replaceState(null, '', location.pathname + location.search); }
+const ID = leer();
+
+const instalada = matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches || navigator.standalone === true;
+const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+
+// ---------- la app ----------
+let espera = null;
+function abrirApp() {
+  const id = leer();
+  if (!id) return pedirLink();
+  $('app').classList.remove('hide');
+  const sp = $('splash'); sp.classList.remove('fuera');
+  $('sp-acc').classList.add('hide'); $('sp-dots').classList.remove('hide');
+  if (!navigator.onLine) { avisar('Sin conexión', 'Cuando vuelva la señal, Lumatvet se abre sola.'); addEventListener('online', abrirApp, { once: true }); return; }
+  $('sp-t').textContent = 'Abriendo Lumatvet'; $('sp-s').textContent = 'Trayendo los datos de la planilla…';
+  const viejo = $('app').querySelector('iframe'); if (viejo) viejo.remove();
+  const f = document.createElement('iframe');
+  f.title = 'Lumatvet'; f.allow = 'clipboard-write; camera; microphone; geolocation';
+  f.referrerPolicy = 'no-referrer';
+  f.onload = () => { clearTimeout(espera); setTimeout(() => sp.classList.add('fuera'), 250); };
+  f.src = urlApp(id);
+  $('app').appendChild(f);
+  clearTimeout(espera);
+  espera = setTimeout(() => avisar('Está tardando más de lo normal', 'Revisá la señal y probá de nuevo.'), 25000);
+}
+function avisar(t, s) { $('sp-t').textContent = t; $('sp-s').textContent = s; $('sp-dots').classList.add('hide'); $('sp-acc').classList.remove('hide'); }
+
+function pedirLink() { $('app').classList.add('hide'); $('inst').classList.add('hide'); $('falta').classList.remove('hide'); }
+function guardarLink() {
+  const id = idDe($('f-link').value);
+  $('f-err').classList.toggle('hide', !!id);
+  if (!id) return;
+  poner(id); $('falta').classList.add('hide');
+  if (instalada) abrirApp(); else mostrarInstalar();
+}
+
+// ---------- instalar ----------
+let aviso = null;
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); aviso = e; $('b-inst').classList.remove('hide'); });
+addEventListener('appinstalled', () => { aviso = null; $('b-inst').classList.add('hide'); $('ya').classList.remove('hide'); });
+async function instalar() {
+  if (!aviso) return;
+  aviso.prompt();
+  const r = await aviso.userChoice.catch(() => null);
+  if (r && r.outcome === 'accepted') { $('b-inst').classList.add('hide'); $('ya').classList.remove('hide'); }
+  aviso = null;
+}
+async function copiar() {
+  const t = location.origin + location.pathname + '#' + leer();
+  try { await navigator.clipboard.writeText(t); $('b-copiar').lastChild.textContent = 'Link copiado'; }
+  catch (e) { prompt('Copiá este link:', t); }
+}
+function mostrarInstalar() {
+  $('inst').classList.remove('hide');
+  $('c-ios').classList.toggle('hide', !ios); $('c-android').classList.toggle('hide', ios);
+  const b = $('b-nav');
+  if (leer()) b.href = urlApp(leer()); else b.classList.add('hide');
+}
+
+if (instalada) abrirApp();
+else if (!ID) pedirLink();
+else mostrarInstalar();
+</script>
+</body>
+</html>
